@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Curseforge 下载助手</title>
+
+	<script type="text/javascript"
+		src="https://cdn.jsdelivr.net/combine/npm/vue@2.6.11,npm/qs@6.9.2/dist/qs.min.js,npm/axios@0.19.2/dist/axios.min.js">
+	</script>
+
+	<style>
+		[v-cloak] {
+			display: none
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<h1>Curseforge 下载助手</h1>
+
+		<div id="projectChooser">
+			项目 ID：
+			<input type="text" v-model="projectId" :disabled="isLoading">
+			<button @click="loadProject" :disabled="isLoading">加载</button>
+			<span v-if="isLoading">加载中...</span>
+		</div>
+
+		<div id="projectInfo" v-if="isProjectLoaded">
+			<hr>
+			<h2 v-text="projectInfo.title"></h2>
+			<img :src="projectInfo.thumbnail">
+			<br>
+			<span v-text="projectInfo.desc"></span>
+			<br>
+			<div v-for="i in projectInfo.categories">
+				<code v-text="i"></code>
+			</div>
+			<a :href="projectInfo.post">原地址</a>
+			<hr>
+			选择版本：
+			<select v-model="currentVersion">
+				<option v-for="i in projectInfo.versions" :key="i">{{ i }}</option>
+			</select>
+			<br>
+			选择文件：
+			<select v-model="currentFile">
+				<option v-for="i in projectInfo.files[currentVersion]" :key="i.name">{{ i.name }}</option>
+			</select>
+			<br>
+			<div v-if="downloadUrl() !== ''">
+				<button @click="jumpToDownload">点我下载</button>
+				或者<a :href="downloadUrl()">点击此处</a>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="app.js"></script>
+</body>
+
+</html>
